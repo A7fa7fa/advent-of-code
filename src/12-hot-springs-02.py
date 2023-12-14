@@ -23,6 +23,26 @@ def parsSprings(rawInput: List[str]) -> List[Dict[str, str|Tuple[int]]]:
 
 MEMO = dict()
 
+# For future me:
+# There are two base cases to consider based on the first spring in a config.
+# a unkown spring is working. i consider it as working
+# -> therefore i just ignore it. because i am only interesed in damaged groups. recursive call count again without first spring
+#
+# a unkown spring is damaged. i consider it as damaged and the first spring of the first damaged group
+# -> a group is valid if there are enough springs left in the configuration
+# -> and in the next n springs (size of damaged group) there is no working spring
+# -> and the length of the config is equal to the size of damaged group or the next spring after this one is not damaged
+# this means i found a valid broken group. i remove the group from the config and from groups and call count again
+#
+# this opens up like a binary tree for every spring in the config until all possible configurations are considered
+# until the config and the groups are empty -> this means this branch is valid and returns 1 otherwise is invalid and returns 0
+# or until there are no groups left and there are no damaged springs left in the config. -> return 1 otherwise is invalid and returns 0
+#
+# Caching
+# because there are so many options to consider configurations and groups will show up multiple times
+# therefor if i ever find a config+group i have seen before i return the cached value otherwise i cache the value for future reference
+
+
 def count(config : str, groups: Tuple[int]) -> int:
 
     if config == "":
